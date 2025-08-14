@@ -1,0 +1,6 @@
+.DS_Store
+
+pages/
+archive/
+!pages/home.txt
+!archive/README.md
