@@ -90,6 +90,7 @@ function htHeader(string $htTitle = ""): string {
 	$htOut .= "<header>\n";
 	$htOut .= "<h1>".$htTitle."</h1>";
 	$htOut .= "</header>\n";
+	$htOut .= "<main>\n";
 	return $htOut;
 }
 
@@ -100,6 +101,7 @@ function htHeader(string $htTitle = ""): string {
  */
 function htFooter(): string {
 	$htOut = "";
+	$htOut .= "</main>\n";
 	$htOut .= "</body>\n";
 	$htOut .= "</html>\n";
 	return $htOut;
