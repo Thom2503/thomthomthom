@@ -67,8 +67,7 @@ if (isset($_POST['field']['upload']) && count($_POST['field']) > 0 && $_POST['fi
 if (!isLoggedIn() && $data['public'] == false) {
 	header("Location: login.php");
 	exit;
-}
-if ($data['public']) {
+} else if ((isset($data) && $data['public'] == true) || isLoggedIn()) {
 	$showPageContent = true;
 }
 
@@ -88,7 +87,7 @@ if ($doesFileExist) {
 	echo "<em>Editing page by: ".htmlspecialchars($_COOKIE['login']['name'])."</em></br>\n";
 }
 
-if ($showPageContent && $doesFileExist && !$editPage) {
+if ($showPageContent == true && $doesFileExist == true && $editPage == false) {
 	if (isLoggedIn()) {
 		echo "<a href='page.php?title=".urlencode($data['pagename'])."&edit=1'>Edit page</a><br>\n";
 	}
