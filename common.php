@@ -24,7 +24,7 @@ $GLOBALS['archive_dir'] = rtrim($GLOBALS['archive_dir'], "/");
  *
  * @return PDOStatement $stmt - the statement or the result of the query
  */
-function dbExec(string $query, array $params = []): PDOStatement {
+function dbExec(string $query, array $params = []) {
 	$stmt = $GLOBALS['db']->prepare($query);
 	$stmt->setFetchMode(PDO::FETCH_ASSOC);
 
@@ -56,7 +56,7 @@ function isLoggedIn() {
 	if (!isset($_COOKIE['login']) && !isset($_SESSION['login'])) {
 		return false;
 	}
-	$GLOBALS['logins'][$_COOKIE['login']['user_id']] = $_COOKIE['login']['username'];
+	$GLOBALS['logins'][$_COOKIE['login']['user_id']] = $_COOKIE['login']['name'];
 	return true;
 }
 

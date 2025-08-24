@@ -2,9 +2,27 @@
 
 require "common.php";
 
-print_r($_POST);
 if (isset($_POST['field']) && count($_POST['field']) > 0 && $_POST['field']['login'] != "") {
 	$res = dbExec("SELECT * FROM `users` WHERE `name` = :name", ['name' => $_POST['field']['user_name']]);
+	if ($res == false) exitWithError(403, "Not valid");
+
+	// get the data from the query
+	$data = $res->fetch();
+	$pass = $data['password'];
+	$user = trim($data['name']);
+	$id = (int)$data['id'];
+	if (password_verify($_POST['field']['user_pass'], $pass)) {
+		// cookie based login
+		$ten_years = 315360000;
+		setcookie('login[name]', $user, time() + $ten_years, '/');
+		setcookie('login[user_id]', $id, time() + $ten_years, '/');
+
+		// set the session too i guess
+		$_SESSION['login']['user_id'] = $id;
+		header("location: index.php");
+		exit(0);
+	}
+	exitWithError(403, "Bad user, not authorized");
 }
 
 echo htHeader("Login");

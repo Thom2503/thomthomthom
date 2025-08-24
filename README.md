@@ -1,5 +1,5 @@
 # THOMTHOMTHOM
-Inspired by WikiWikiWiki, DocuWIKI, Wikipedia, Ratfactors HTML only wiki, I
+Inspired by WikiWikiWeb, DocuWIKI, Wikipedia, Ratfactors HTML only wiki, I
 wanted to create my own wiki. This is because I want to take more notes and
 tidbits, but not fully for the public to see. So I'm going to create an free
 open-source wiki, named THOMTHOMTHOM.
@@ -21,17 +21,20 @@ Now on to the fun part.
 I am going to have two DB schema's, one with users (me) and the other with the pages.
 ```sql
 PRAGMA integrity_check;
+PRAGMA foreign_keys = ON;
 CREATE TABLE IF NOT EXISTS `users` (
     `id` INTEGER NOT NULL PRIMARY KEY,
     `name` VARCHAR(63) NOT NULL UNIQUE,
-    `admin` INTEGER NOT NULL CHECK (`admin` < 2),
+    `admin` INTEGER NOT NULL CHECK (`admin` IN (0, 1)),
+    `password` TEXT NOT NULL DEFAULT ''
 );
 CREATE TABLE IF NOT EXISTS `pages` (
     `id` INTEGER NOT NULL PRIMARY KEY,
     `pagename` VARCHAR(255) NOT NULL,
     `madeby` INTEGER NOT NULL,
-    `public` INTEGER NOT NULL CHECK (`public` < 2),
+    `public` INTEGER NOT NULL CHECK (`public` IN (0, 1)),
     `ts` INTEGER,
+    FOREIGN KEY (`madeby`) REFERENCES `users`(`id`)
 );
 ```
 Wow big and beautiful tables, now onto the directories.
