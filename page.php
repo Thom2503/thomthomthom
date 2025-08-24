@@ -40,6 +40,7 @@ if (isset($_POST['field']['upload']) && count($_POST['field']) > 0 && $_POST['fi
 	}
 
 	// to write it to a file
+	// TODO: need another type of ts because pages are now not saved anymore...
 	$newPageFile = $pageDir."/".$data['ts']."_".$data['pagename'].".txt";
 	if (file_put_contents($newPageFile, $_POST['field']['page_content']) == false) {
 		exitWithError(500, "Error with saving page.");
