@@ -42,7 +42,7 @@ Wow big and beautiful tables, now onto the directories.
 THOMTHOMTHOM/
 | index.php
 | login.php
-| edit.php
+| page.php
 | common.php
 | pages/
   | page1.txt
