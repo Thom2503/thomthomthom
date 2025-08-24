@@ -107,6 +107,7 @@ function htHeader(string $htTitle = ""): string {
 function htFooter(): string {
 	$htOut = "";
 	$htOut .= "</main>\n";
+	$htOut .= "<footer>Created by: <a href='https://thomveldhuis.xyz'>Thom</a> &copy; 2025</footer>\n";
 	$htOut .= "</body>\n";
 	$htOut .= "</html>\n";
 	return $htOut;
