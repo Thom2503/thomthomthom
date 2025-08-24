@@ -4,74 +4,93 @@ require "common.php";
 
 $data = [];
 $data['id'] = 0;
-$data['pagename'] = "";
+$data['pagename'] = null;
 $data['madeby'] = "";
 $data['ts'] = "";
 $data['public'] = false;
 
+$pageDir = $GLOBALS['page_dir'];
+$archiveDir = $GLOBALS['archive_dir'];
 
 if (isset($_GET['title']) && trim($_GET['title']) != "") {
-	$res = dbExec("SELECT * FROM `pages` WHERE `pagename` = :title", ['title' => $_GET['title']]);
-	if ($res != false) {
+	$res = dbExec("SELECT * FROM `pages` WHERE `pagename` = :title", ['title' => trim($_GET['title'])]);
+	if ($res) {
 		$data = $res->fetch();
 	}
 }
 
-$showPageContent = false;
 $pageName = $data['ts']."_".$data['pagename'].".txt";
-$doesFileExist = file_exists($GLOBALS['page_dir']."/".$pageName);
+$pageFile = $pageDir."/".$pageName;
+$doesFileExist = file_exists($pageFile);
 $editPage = isset($_GET['edit']) && $_GET['edit'] == true && isLoggedIn();
+$showPageContent = false;
 
-if (isset($_POST['field']) && count($_POST['field']) > 0 && $_POST['field']['upload'] != "") {
-	// data to be saved
+if (isset($_POST['field']['upload']) && count($_POST['field']) > 0 && $_POST['field']['upload'] != "") {
 	$data['pagename'] = $_POST['field']['page_title'];
-	$data['ts'] = time();
-	$data['public'] = (int)(isset($_POST['field']['page_public']) && $_POST['field']['page_public'] == "Yes");
+	$data['ts']	= time();
+	$data['public'] = (int)(isset($_POST['field']['page_public']) && $_POST['field']['page_public'] === "Yes");
 	$data['madeby'] = $_COOKIE['login']['user_id'];
 
+	// if there is a file make it another archive
 	if ($doesFileExist) {
-		$file = rename($GLOBALS['page_dir']."/".$pageName, $GLOBALS['archive_dir']."/".$data['ts']."_".$data['pagename'].".txt");
-		if (!$file) {
+		$archivedName = $archiveDir."/".$data['ts']."_".$data['pagename'].".txt";
+		if (rename($pageFile, $archivedName) == false) {
 			exitWithError(500, "Error archiving the page");
 		}
 	}
+
 	// to write it to a file
-	$file = file_put_contents($GLOBALS['page_dir']."/".$data['ts']."_".$data['pagename'].".txt", $_POST['field']['page_content']);
-	if (!$file) {
+	$newPageFile = $pageDir."/".$data['ts']."_".$data['pagename'].".txt";
+	if (file_put_contents($newPageFile, $_POST['field']['page_content']) == false) {
 		exitWithError(500, "Error with saving page.");
 	}
-	$query = "INSERT INTO pages (id, pagename, madeby, ts, public)".
-	         " VALUES (:id, :pagename, :madeby, :ts, :public) ON CONFLICT(id) DO UPDATE SET".
-		     "  pagename = excluded.pagename, madeby = excluded.madeby, ts = excluded.ts, public = excluded.public;";
-	$res = dbExec(
-		$query,
-		['pagename' => $data['pagename'],
-		 'madeby' => $data['madeby'],
-		 'ts' => $data['ts'],
-		 'public' => $data['public'],
-		 'id' => $data['id']]
-	);
-	header("location: index.php");
+
+	$query = "
+		INSERT INTO pages (id, pagename, madeby, ts, public)
+		VALUES (:id, :pagename, :madeby, :ts, :public)
+		ON CONFLICT(id) DO UPDATE
+		SET pagename = excluded.pagename,
+			madeby = excluded.madeby,
+			ts = excluded.ts,
+			public = excluded.public;
+	";
+	dbExec($query, $data);
+
+	header("Location: index.php");
+	exit;
 }
 
 if (!isLoggedIn() && $data['public'] == false) {
-	header("location: login.php");
-} else if (isset($data) && $data['public'] == true) {
+	header("Location: login.php");
+	exit;
+}
+if ($data['public']) {
 	$showPageContent = true;
 }
 
-echo htHeader("Edit");
+echo htHeader($data['pagename'] ?? "Edit");
 
 echo "<div>\n";
-echo $doesFileExist ? "<h2>".$data['pagename']."</h2>" : "<h2>Page edit</h2>\n";
-if ($showPageContent == true && $doesFileExist == true && $editPage == false) {
+if ($doesFileExist) {
+	$res = dbExec(
+		"SELECT * FROM `users`
+		 LEFT JOIN `pages` ON `users`.`id` = `pages`.`madeby`
+		 WHERE `pages`.`id` = :id AND `pages`.`madeby` = :mid",
+		['mid' => $data['madeby'], 'id' => $data['id']]
+	)->fetch();
+
+	echo "<em>Created: ".date("Y-m-d H:i", $data['ts'])." by ".htmlspecialchars($res['name'])."</em></br>\n";
+} else {
+	echo "<em>Editing page by: ".htmlspecialchars($_COOKIE['login']['username'])."</em></br>\n";
+}
+
+if ($showPageContent && $doesFileExist && !$editPage) {
 	if (isLoggedIn()) {
-		$_REQUEST['edit_page'] = true;
-		echo "<a href='page.php?title=".$data['pagename']."&edit=1'>Edit page</a>";
+		echo "<a href='page.php?title=".urlencode($data['pagename'])."&edit=1'>Edit page</a><br>\n";
 	}
-	echo "<pre>";
-	echo include $GLOBALS['page_dir']."/".$pageName;
-	echo "</pre>\n";
+	$content = file_get_contents($pageFile);
+	$safe = strip_tags($content, "<img><a>");
+	echo "<pre>".$safe."</pre>\n";
 } else {
 ?>
 <div class="form-div">
@@ -79,8 +98,8 @@ if ($showPageContent == true && $doesFileExist == true && $editPage == false) {
 		<button autofocus>Close</button>
 		<h3>Page edit help</h3>
 		<p>
-			Pages are edited as pure .txt files, but there is one exception.</br>
-			pages can have some html and that is the <code><img></code> tag and the <code><a></code> tag.
+			Pages are edited as pure .txt files, but there is one exception.<br>
+			Pages can have some html and that is the <code>&lt;img&gt;</code> tag and the <code>&lt;a&gt;</code> tag.
 		</p>
 	</dialog>
 	<button id="help-button">Help</button>
@@ -88,23 +107,27 @@ if ($showPageContent == true && $doesFileExist == true && $editPage == false) {
 		<p>
 			<label for="title">
 				Page title:
-				<input type="text" id="title" name="field[page_title]" value="<?php echo $data['pagename']; ?>" required />
+				<input type="text" id="title" name="field[page_title]"
+					   value="<?php echo htmlspecialchars($data['pagename']); ?>" required />
 			</label>
 		</p>
 		<p>
-			<label for="content">content:</label><br>
-			<textarea id="content" name="field[page_content]" rows="40" cols="80"><?php if ($doesFileExist == true) {echo include $GLOBALS['page_dir']."/".$pageName;} ?></textarea>
+			<label for="content">Content:</label><br>
+			<textarea id="content" name="field[page_content]" rows="40" cols="80"><?php
+				if ($doesFileExist) {
+					echo htmlspecialchars(file_get_contents($pageFile));
+				}
+			?></textarea>
 		</p>
 		<p>
 			<label for="public">
 				Publish:
-				<input type="checkbox" id="public" name="field[page_public]" value="Yes" />
+				<input type="checkbox" id="public" name="field[page_public]" value="Yes"
+					<?php echo $data['public'] ? "checked" : ""; ?> />
 			</label>
 		</p>
 		<p>
-			<label for="upload">
-				<input type="submit" id="upload" name="field[upload]" value="Save changes" required />
-			</label>
+			<input type="submit" id="upload" name="field[upload]" value="Save changes" required />
 		</p>
 	</form>
 </div>
@@ -114,3 +137,4 @@ if ($showPageContent == true && $doesFileExist == true && $editPage == false) {
 echo "</div>\n";
 
 echo htFooter();
+
