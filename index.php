@@ -22,7 +22,7 @@ if (count($allArticles) == 0) {
 	echo "<ul>\n";
 	foreach ($allArticles as $k => $page) {
 		$title = htmlentities($page['pagename']);
-		echo "<li><a href='page.php?title=".$title."'>".$title."</a></li>\n";
+		echo "<li><a href='page.php?title=".urlencode($title)."'>".$title."</a></li>\n";
 	}
 	echo "</ul>\n";
 }

@@ -83,12 +83,17 @@ function htHeader(string $htTitle = ""): string {
 	$htOut .= "<meta charset='utf-8'>";
 	$htOut .= "<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n";
 	$htOut .= "<link rel='icon' type='image/png' href='static/icon32x32.png'/>\n";
-	$htOut .= "<link rel='stylesheet'  href='style/style.css'/>\n";
+	$htOut .= "<link rel='stylesheet'  href='style/index.css'/>\n";
 	$htOut .= "<title>THOMTHOMTHOM - ".$htTitle."</title>\n";
 	$htOut .= "</head>\n";
 	$htOut .= "<body>\n";
 	$htOut .= "<header>\n";
 	$htOut .= "<h1>".$htTitle."</h1>";
+	$htOut .= "<nav>\n";
+	$htOut .= "<a href='index.php'>Home</a>\n";
+	$htOut .= "<a href='page.php'>New Page</a>\n";
+	$htOut .= "<a href='login.php?logout=1'>Logout</a>\n";
+	$htOut .= "</nav>\n";
 	$htOut .= "</header>\n";
 	$htOut .= "<main>\n";
 	return $htOut;
