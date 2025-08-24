@@ -16,13 +16,15 @@ echo "<div>\n";
 if (count($allArticles) == 0) {
 	echo "<p>No pages found, yet\n";
 	echo "If you can, add them here: \n";
-	echo "<a href='edit.php'>Add page</a>";
+	echo "<a href='page.php'>Add page</a>";
 	echo "</p>";
 } else {
+	echo "<ul>\n";
 	foreach ($allArticles as $k => $page) {
-		print_r($k);
-		print_r($page);
+		$title = htmlentities($page['pagename']);
+		echo "<li><a href='page.php?title=".$title."'>".$title."</a></li>\n";
 	}
+	echo "</ul>\n";
 }
 echo "</div>\n";
 echo "</div>\n";

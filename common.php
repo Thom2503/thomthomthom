@@ -78,7 +78,7 @@ function checkLoggedIn() {
 function htHeader(string $htTitle = ""): string {
 	$htOut = "";
 	$htOut .= "<!DOCTYPE html>\n";
-	$htOut .= "<html>\n";
+	$htOut .= "<html lang=".$GLOBALS['lang'].">\n";
 	$htOut .= "<head>\n";
 	$htOut .= "<meta charset='utf-8'>";
 	$htOut .= "<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n";
