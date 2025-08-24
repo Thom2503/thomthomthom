@@ -2,6 +2,14 @@
 
 require "common.php";
 
+if (isset($_GET['logout']) && $_GET['logout'] == 1) {
+	setcookie('login[name]', "", time() - 3600);
+	setcookie('login[user_id]', "", time() - 3600);
+	session_destroy();
+	session_write_close();
+	header("location: index.php");
+}
+
 if (isset($_POST['field']) && count($_POST['field']) > 0 && $_POST['field']['login'] != "") {
 	$res = dbExec("SELECT * FROM `users` WHERE `name` = :name", ['name' => $_POST['field']['user_name']]);
 	if ($res == false) exitWithError(403, "Not valid");
