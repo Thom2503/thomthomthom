@@ -81,7 +81,7 @@ if ($doesFileExist) {
 
 	echo "<em>Created: ".date("Y-m-d H:i", $data['ts'])." by ".htmlspecialchars($res['name'])."</em></br>\n";
 } else {
-	echo "<em>Editing page by: ".htmlspecialchars($_COOKIE['login']['username'])."</em></br>\n";
+	echo "<em>Editing page by: ".htmlspecialchars($_COOKIE['login']['name'])."</em></br>\n";
 }
 
 if ($showPageContent && $doesFileExist && !$editPage) {
@@ -108,7 +108,7 @@ if ($showPageContent && $doesFileExist && !$editPage) {
 			<label for="title">
 				Page title:
 				<input type="text" id="title" name="field[page_title]"
-					   value="<?php echo htmlspecialchars($data['pagename']); ?>" required />
+					   value="<?php echo htmlspecialchars($data['pagename'] ?? ""); ?>" required />
 			</label>
 		</p>
 		<p>
