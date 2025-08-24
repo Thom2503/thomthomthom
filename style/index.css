@@ -34,18 +34,35 @@ pre {
 	word-wrap: break-word;
 }
 
+header {
+	padding: 1em;
+	border: none;
+}
+
 header h1 { 
 	margin: 0;
 }
 
 header img {
 	width: 128px;
+	float: left;
+	margin: 0 10px 10px 0;
+}
+
+img, figure img {
+	max-width: 100%;
 }
 
 nav {
 	font-size: 1.2em;
 	margin: 10px;
 	border-bottom: 2px dashed #bbb;
+}
+
+footer { 
+	margin: 1em;
+	font-size: .9em;
+	color: #222;
 }
 
 @media only screen and (max-width: 600px) {

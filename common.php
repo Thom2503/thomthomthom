@@ -88,11 +88,14 @@ function htHeader(string $htTitle = ""): string {
 	$htOut .= "</head>\n";
 	$htOut .= "<body>\n";
 	$htOut .= "<header>\n";
+	$htOut .= "<img src='static/icon128x128.svg' />";
 	$htOut .= "<h1>".$htTitle."</h1>";
+	$htOut .= "<p>This is THOMTHOMTHOM my wiki site, with pages of knowledge<br>\n";
+	$htOut .= "<em>Zarathustra climbs to great heights with a dwarf on his shoulders to show him his greatest thought</em></p>\n";
 	$htOut .= "<nav>\n";
 	$htOut .= "<a href='index.php'>Home</a>\n";
 	$htOut .= "<a href='page.php'>New Page</a>\n";
-	$htOut .= "<a href='login.php?logout=1'>Logout</a>\n";
+	$htOut .= "<a href='login.php'>Login</a>\n";
 	$htOut .= "</nav>\n";
 	$htOut .= "</header>\n";
 	$htOut .= "<main>\n";
@@ -107,7 +110,8 @@ function htHeader(string $htTitle = ""): string {
 function htFooter(): string {
 	$htOut = "";
 	$htOut .= "</main>\n";
-	$htOut .= "<footer>Created by: <a href='https://thomveldhuis.xyz'>Thom</a> &copy; 2025</footer>\n";
+	$htOut .= "<footer>Created by: <a href='https://thomveldhuis.xyz'>Thom</a> &copy; 2025 - \n";
+	$htOut .= "<a href='login.php?logout=1'>Logout</a></footer>\n";
 	$htOut .= "</body>\n";
 	$htOut .= "</html>\n";
 	return $htOut;

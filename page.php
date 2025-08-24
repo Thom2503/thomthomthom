@@ -46,15 +46,19 @@ if (isset($_POST['field']['upload']) && count($_POST['field']) > 0 && $_POST['fi
 	}
 
 	$query = "
-		INSERT INTO pages (id, pagename, madeby, ts, public)
-		VALUES (:id, :pagename, :madeby, :ts, :public)
-		ON CONFLICT(id) DO UPDATE
-		SET pagename = excluded.pagename,
-			madeby = excluded.madeby,
-			ts = excluded.ts,
-			public = excluded.public;
+		INSERT INTO pages (pagename, madeby, ts, public)
+		VALUES (:pagename, :madeby, :ts, :public)
+		ON CONFLICT(pagename) DO UPDATE SET
+		    madeby = excluded.madeby,
+		    public = excluded.public;
+		    ts = excluded.ts;
 	";
-	dbExec($query, $data);
+	dbExec($query,
+		['pagename' => $data['pagename'],
+		 'madeby' => $data['madeby'],
+		 'ts' => $data['ts'],
+		 'public' => $data['public']]
+	);
 
 	header("Location: index.php");
 	exit;
