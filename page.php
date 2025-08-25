@@ -26,6 +26,14 @@ $editPage = isset($_GET['edit']) && $_GET['edit'] == true && isLoggedIn();
 $showPageContent = false;
 
 if (isset($_POST['field']['upload']) && count($_POST['field']) > 0 && $_POST['field']['upload'] != "") {
+	if (isset($_POST['field']['page_delete']) && $_POST['field']['page_delete'] === "Yes" && $doesFileExist) {
+		if (unlink($pageFile) == false) {
+			exitWithError(500, "Couldn't delete page");
+		}
+		dbExec("DELETE FROM `pages` WHERE `id` = :pid AND `pagename` = :pna", ['pid' => $data['id'], 'pna' => $data['pagename']]);
+		header("Location: index.php");
+		exit;
+	}
 	$data['pagename'] = $_POST['field']['page_title'];
 	$data['ts']	= time();
 	$data['public'] = (int)(isset($_POST['field']['page_public']) && $_POST['field']['page_public'] === "Yes");
@@ -133,6 +141,10 @@ if ($showPageContent == true && $doesFileExist == true && $editPage == false) {
 		<p>
 			<input type="submit" id="upload" name="field[upload]" value="Save changes" required />
 		</p>
+			<label for="delete">
+				Delete:
+				<input type="checkbox" id="delete" name="field[page_delete]" value="Yes" />
+			</label>
 	</form>
 </div>
 <script src="static/edit.js"></script>

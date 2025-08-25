@@ -4,7 +4,7 @@ require "common.php";
 
 echo htHeader("Home");
 
-$allArticles = dbExec("SELECT * FROM `pages`")->fetchAll();
+$allArticles = dbExec("SELECT * FROM `pages` ORDER BY `ts` DESC")->fetchAll();
 
 echo "<div>\n";
 echo "<h2>THOMTHOMTHOM</h2>\n";
