@@ -19,7 +19,7 @@ if (isset($_GET['title']) && trim($_GET['title']) != "") {
 	}
 }
 
-$pageName = $data['ts']."_".$data['pagename'].".txt";
+$pageName = $data['pagename'].".txt";
 $pageFile = $pageDir."/".$pageName;
 $doesFileExist = file_exists($pageFile);
 $editPage = isset($_GET['edit']) && $_GET['edit'] == true && isLoggedIn();
@@ -40,8 +40,7 @@ if (isset($_POST['field']['upload']) && count($_POST['field']) > 0 && $_POST['fi
 	}
 
 	// to write it to a file
-	// TODO: need another type of ts because pages are now not saved anymore...
-	$newPageFile = $pageDir."/".$data['ts']."_".$data['pagename'].".txt";
+	$newPageFile = $pageDir."/".$data['pagename'].".txt";
 	if (file_put_contents($newPageFile, $_POST['field']['page_content']) == false) {
 		exitWithError(500, "Error with saving page.");
 	}
