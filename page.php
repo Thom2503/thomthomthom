@@ -94,6 +94,7 @@ if ($showPageContent == true && $doesFileExist == true && $editPage == false) {
 	$content = file_get_contents($pageFile);
 	$safe = strip_tags($content, "<img><a>");
 	echo "<pre>".$safe."</pre>\n";
+	if (isLoggedIn()) echo "<p>This page is ".($data['public'] == true ? "public" : "private")."</p>";
 } else {
 ?>
 <div class="form-div">

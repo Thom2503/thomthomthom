@@ -4,8 +4,17 @@ require "common.php";
 
 echo htHeader("Home");
 
-$allArticles = dbExec("SELECT * FROM `pages`;")->fetchAll();
+$allArticles = dbExec("SELECT * FROM `pages`")->fetchAll();
 
+echo "<div>\n";
+echo "<h2>THOMTHOMTHOM</h2>\n";
+echo "<p>A personal wiki, I wanted to have a place for all the knowledge I gain".
+	" to be stored somewhere. Inspired by many sites I decided to make my own.".
+	" This is THOMTHOMTHOM, a personal wiki. All the pages are being listed below".
+	" in chronological order, and all pages are <code>.txt</code> only. I chose".
+	" <code>.txt</code> to stand out on the rest.</p>";
+echo "<p>Read this: <a href='page.php?title=THOMTHOMTHOM'>THOMTHOMTHOM</a>";
+echo "</div>\n";
 echo "<div>\n";
 echo "<h2>All articles</h2>\n";
 echo "<div>\n";
