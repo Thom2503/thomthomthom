@@ -84,6 +84,10 @@ function htHeader(string $htTitle = ""): string {
 	$htOut .= "<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n";
 	$htOut .= "<link rel='icon' type='image/png' href='static/icon32x32.png'/>\n";
 	$htOut .= "<link rel='stylesheet'  href='style/index.css'/>\n";
+	$htOut .= "<script id='MathJax-script' async src='https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js'></scrip>";
+	// cloudflare...
+	$htOut .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=AM_CHTML'></script>";
+	$htOut .= "<script src='static/ASCIIMathML.js'></script>";
 	$htOut .= "<title>THOMTHOMTHOM - ".$htTitle."</title>\n";
 	$htOut .= "</head>\n";
 	$htOut .= "<body>\n";
