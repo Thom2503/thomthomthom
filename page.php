@@ -113,6 +113,10 @@ if ($showPageContent == true && $doesFileExist == true && $editPage == false) {
 			Pages are edited as pure .txt files, but there is one exception.<br>
 			Pages can have some html and that is the <code>&lt;img&gt;</code> tag and the <code>&lt;a&gt;</code> tag.
 		</p>
+		<h4>AsciiMath help</h4>
+		<p>
+			Everyting in between <pre>`</pre> will be translated using AsciiMath.
+		</p>
 	</dialog>
 	<button id="help-button">Help</button>
 	<form action="" method="post" id="edit-page-form">
