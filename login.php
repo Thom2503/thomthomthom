@@ -11,7 +11,7 @@ if (isset($_GET['logout']) && $_GET['logout'] == 1) {
 }
 
 if (isset($_POST['field']) && count($_POST['field']) > 0 && $_POST['field']['login'] != "") {
-	$res = dbExec("SELECT * FROM `users` WHERE `name` = :name", ['name' => $_POST['field']['user_name']]);
+	$res = dbExec("SELECT * FROM `users` WHERE LOWER(`name`) = :name", ['name' => strtolower($_POST['field']['user_name'])]);
 	if ($res == false) exitWithError(403, "Not valid");
 
 	// get the data from the query
